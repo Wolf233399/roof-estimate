@@ -22,21 +22,43 @@ if customer_name == "":                         # IF - checks if the name is emp
     print("Error: Customer name cannot be empty.")  # print() FUNCTION - shows the error message
     exit()                                      # exit() FUNCTION - stops the program
 
-length = float(input("Roof length in feet: "))  # VARIABLE = float() FUNCTION changes typing to a decimal number, input() asks for it
+try:                                            # TRY - try to read the length as a number
+    length = float(input("Roof length in feet: "))  # VARIABLE = float() FUNCTION changes typing to a decimal number, input() asks for it
+except ValueError:                              # EXCEPT - runs only if the typing was not a number
+    print("Error: Roof length must be a number only, like 40.")  # print() FUNCTION - shows the error message
+    exit()                                      # exit() FUNCTION - stops the program
 
 if length <= 0:                                 # IF - checks if length is 0 or less
     print("Error: Roof length must be more than 0.")  # print() FUNCTION - shows the error message
     exit()                                      # exit() FUNCTION - stops the program
 
-width = float(input("Roof width in feet: "))    # VARIABLE = float() + input() FUNCTIONS - same as length
+try:                                            # TRY - try to read the width as a number
+    width = float(input("Roof width in feet: "))  # VARIABLE = float() + input() FUNCTIONS - same as length
+except ValueError:                              # EXCEPT - runs only if the typing was not a number
+    print("Error: Roof width must be a number only, like 50.")  # print() FUNCTION - shows the error message
+    exit()                                      # exit() FUNCTION - stops the program
 
 if width <= 0:                                  # IF - checks if width is 0 or less
     print("Error: Roof width must be more than 0.")  # print() FUNCTION - shows the error message
     exit()                                      # exit() FUNCTION - stops the program
 
-material_cost = float(input("Material cost: $"))  # VARIABLE = float() + input() FUNCTIONS
-labor_cost = float(input("Labor cost: $"))        # VARIABLE = float() + input() FUNCTIONS
-other_cost = float(input("Other cost: $"))        # VARIABLE = float() + input() FUNCTIONS
+try:                                            # TRY - try to read the material cost as a number
+    material_cost = float(input("Material cost: $"))  # VARIABLE = float() + input() FUNCTIONS
+except ValueError:                              # EXCEPT - runs only if the typing was not a number
+    print("Error: Material cost must be a number only, like 5000.")  # print() FUNCTION - shows the error message
+    exit()                                      # exit() FUNCTION - stops the program
+
+try:                                            # TRY - try to read the labor cost as a number
+    labor_cost = float(input("Labor cost: $"))        # VARIABLE = float() + input() FUNCTIONS
+except ValueError:                              # EXCEPT - runs only if the typing was not a number
+    print("Error: Labor cost must be a number only, like 3000.")  # print() FUNCTION - shows the error message
+    exit()                                      # exit() FUNCTION - stops the program
+
+try:                                            # TRY - try to read the other cost as a number
+    other_cost = float(input("Other cost: $"))        # VARIABLE = float() + input() FUNCTIONS
+except ValueError:                              # EXCEPT - runs only if the typing was not a number
+    print("Error: Other cost must be a number only, like 500.")  # print() FUNCTION - shows the error message
+    exit()                                      # exit() FUNCTION - stops the program
 
 area = length * width                           # VARIABLE = CALCULATION - length times width
 squares = area / 100                            # VARIABLE = CALCULATION - 1 square = 100 sq ft, so divide by 100
