@@ -1,83 +1,87 @@
-# Roof Estimate - Sprint 1                      <- title comment
+# Roof Estimate - Sprint 2
 # US-01: Create an estimate / US-02: Calculate area, squares, total
 # US-03: Save an estimate and view the saved list
+# Sprint 2 split: the math lives in estimate_logic.py, the file work lives in estimate_store.py,
+# and this file only talks to the user (Single Responsibility).
 
-import json                                       # IMPORT - brings in tools to save and load a list from a file
 
-estimates = []                                    # VARIABLE = LIST - empty list, will hold the saved estimates
+from estimate_logic import calculate_area, calculate_squares, calculate_total   # IMPORT - brings in the math functions
+from estimate_logic import is_valid_name, is_valid_measurement, make_estimate    # IMPORT - brings in the checking and record functions
+from estimate_store import EstimateStore          # IMPORT - brings in the store class
 
-try:                                              # TRY - try to open the saved file
-    saved_file = open("estimates.json", "r")      # VARIABLE = open() FUNCTION - opens the file to read it
-    estimates = json.load(saved_file)             # VARIABLE = json.load() FUNCTION - reads the saved list from the file
-    saved_file.close()                            # close() FUNCTION - closes the file
-except FileNotFoundError:                         # EXCEPT - runs only if the file is not found yet
-    estimates = []                                # VARIABLE = LIST - no saved file yet, so start with an empty list
 
-print("Roof Estimate")                          # print() FUNCTION - shows text on screen
-print("Create a new estimate")                  # print() FUNCTION - shows text on screen
+def main(store):                                  # FUNCTION - runs the program; the store is handed in, not made here (Dependency Inversion)
 
-customer_name = input("Customer name: ")        # VARIABLE = input() FUNCTION - waits for typing, saves it in customer_name
+    estimates = store.load()                      # VARIABLE = LIST - the saved estimates, read by the store
 
-if customer_name == "":                         # IF - checks if the name is empty
-    print("Error: Customer name cannot be empty.")  # print() FUNCTION - shows the error message
-    exit()                                      # exit() FUNCTION - stops the program
+    print("Roof Estimate")                        # print() FUNCTION - shows text on screen
+    print("Create a new estimate")                # print() FUNCTION - shows text on screen
 
-try:                                            # TRY - try to read the length as a number
-    length = float(input("Roof length in feet: "))  # VARIABLE = float() FUNCTION changes typing to a decimal number, input() asks for it
-except ValueError:                              # EXCEPT - runs only if the typing was not a number
-    print("Error: Roof length must be a number only, like 40.")  # print() FUNCTION - shows the error message
-    exit()                                      # exit() FUNCTION - stops the program
+    customer_name = input("Customer name: ")      # VARIABLE = input() FUNCTION - waits for typing, saves it in customer_name
 
-if length <= 0:                                 # IF - checks if length is 0 or less
-    print("Error: Roof length must be more than 0.")  # print() FUNCTION - shows the error message
-    exit()                                      # exit() FUNCTION - stops the program
+    if is_valid_name(customer_name) == False:     # IF - checks if the name is empty, using the logic function
+        print("Error: Customer name cannot be empty.")   # print() FUNCTION - shows the error message
+        exit()                                    # exit() FUNCTION - stops the program
 
-try:                                            # TRY - try to read the width as a number
-    width = float(input("Roof width in feet: "))  # VARIABLE = float() + input() FUNCTIONS - same as length
-except ValueError:                              # EXCEPT - runs only if the typing was not a number
-    print("Error: Roof width must be a number only, like 50.")  # print() FUNCTION - shows the error message
-    exit()                                      # exit() FUNCTION - stops the program
+    try:                                          # TRY - try to read the length as a number
+        length = float(input("Roof length in feet: "))   # VARIABLE = float() FUNCTION changes typing to a decimal number, input() asks for it
+    except ValueError:                            # EXCEPT - runs only if the typing was not a number
+        print("Error: Roof length must be a number only, like 40.")   # print() FUNCTION - shows the error message
+        exit()                                    # exit() FUNCTION - stops the program
 
-if width <= 0:                                  # IF - checks if width is 0 or less
-    print("Error: Roof width must be more than 0.")  # print() FUNCTION - shows the error message
-    exit()                                      # exit() FUNCTION - stops the program
+    if is_valid_measurement(length) == False:     # IF - checks if length is 0 or less, using the logic function
+        print("Error: Roof length must be more than 0.")   # print() FUNCTION - shows the error message
+        exit()                                    # exit() FUNCTION - stops the program
 
-try:                                            # TRY - try to read the material cost as a number
-    material_cost = float(input("Material cost: $"))  # VARIABLE = float() + input() FUNCTIONS
-except ValueError:                              # EXCEPT - runs only if the typing was not a number
-    print("Error: Material cost must be a number only, like 5000.")  # print() FUNCTION - shows the error message
-    exit()                                      # exit() FUNCTION - stops the program
+    try:                                          # TRY - try to read the width as a number
+        width = float(input("Roof width in feet: "))   # VARIABLE = float() + input() FUNCTIONS - same as length
+    except ValueError:                            # EXCEPT - runs only if the typing was not a number
+        print("Error: Roof width must be a number only, like 50.")   # print() FUNCTION - shows the error message
+        exit()                                    # exit() FUNCTION - stops the program
 
-try:                                            # TRY - try to read the labor cost as a number
-    labor_cost = float(input("Labor cost: $"))        # VARIABLE = float() + input() FUNCTIONS
-except ValueError:                              # EXCEPT - runs only if the typing was not a number
-    print("Error: Labor cost must be a number only, like 3000.")  # print() FUNCTION - shows the error message
-    exit()                                      # exit() FUNCTION - stops the program
+    if is_valid_measurement(width) == False:      # IF - checks if width is 0 or less, using the logic function
+        print("Error: Roof width must be more than 0.")   # print() FUNCTION - shows the error message
+        exit()                                    # exit() FUNCTION - stops the program
 
-try:                                            # TRY - try to read the other cost as a number
-    other_cost = float(input("Other cost: $"))        # VARIABLE = float() + input() FUNCTIONS
-except ValueError:                              # EXCEPT - runs only if the typing was not a number
-    print("Error: Other cost must be a number only, like 500.")  # print() FUNCTION - shows the error message
-    exit()                                      # exit() FUNCTION - stops the program
+    try:                                          # TRY - try to read the material cost as a number
+        material_cost = float(input("Material cost: $"))   # VARIABLE = float() + input() FUNCTIONS
+    except ValueError:                            # EXCEPT - runs only if the typing was not a number
+        print("Error: Material cost must be a number only, like 5000.")   # print() FUNCTION - shows the error message
+        exit()                                    # exit() FUNCTION - stops the program
 
-area = length * width                           # VARIABLE = CALCULATION - length times width
-squares = area / 100                            # VARIABLE = CALCULATION - 1 square = 100 sq ft, so divide by 100
-total = material_cost + labor_cost + other_cost # VARIABLE = CALCULATION - adds the 3 costs
+    try:                                          # TRY - try to read the labor cost as a number
+        labor_cost = float(input("Labor cost: $"))   # VARIABLE = float() + input() FUNCTIONS
+    except ValueError:                            # EXCEPT - runs only if the typing was not a number
+        print("Error: Labor cost must be a number only, like 3000.")   # print() FUNCTION - shows the error message
+        exit()                                    # exit() FUNCTION - stops the program
 
-print()                                         # print() FUNCTION - blank line for spacing
-print("Estimate for:", customer_name)           # print() FUNCTION - shows text + the VARIABLE customer_name
-print("Roof area:", area, "sq ft")              # print() FUNCTION - shows the area VARIABLE
-print("Roofing squares:", squares)              # print() FUNCTION - shows the squares VARIABLE
-print("Total price: $", total)                  # print() FUNCTION - shows the total VARIABLE
+    try:                                          # TRY - try to read the other cost as a number
+        other_cost = float(input("Other cost: $"))   # VARIABLE = float() + input() FUNCTIONS
+    except ValueError:                            # EXCEPT - runs only if the typing was not a number
+        print("Error: Other cost must be a number only, like 500.")   # print() FUNCTION - shows the error message
+        exit()                                    # exit() FUNCTION - stops the program
 
-new_estimate = {"name": customer_name, "squares": squares, "total": total}  # VARIABLE = DICTIONARY - one estimate, with named parts
-estimates.append(new_estimate)                  # append() FUNCTION - adds the new estimate to the list
+    area = calculate_area(length, width)          # VARIABLE = CALCULATION - the logic function times length by width
+    squares = calculate_squares(area)             # VARIABLE = CALCULATION - the logic function divides area by 100
+    total = calculate_total(material_cost, labor_cost, other_cost)   # VARIABLE = CALCULATION - the logic function adds the 3 costs
 
-saved_file = open("estimates.json", "w")        # VARIABLE = open() FUNCTION - opens the file to write it
-json.dump(estimates, saved_file)                # json.dump() FUNCTION - writes the list into the file
-saved_file.close()                              # close() FUNCTION - closes the file
+    print()                                       # print() FUNCTION - blank line for spacing
+    print("Estimate for:", customer_name)         # print() FUNCTION - shows text + the VARIABLE customer_name
+    print("Roof area:", area, "sq ft")            # print() FUNCTION - shows the area VARIABLE
+    print("Roofing squares:", squares)            # print() FUNCTION - shows the squares VARIABLE
+    print("Total price: $", total)                # print() FUNCTION - shows the total VARIABLE
 
-print()                                         # print() FUNCTION - blank line for spacing
-print("Saved estimates:")                       # print() FUNCTION - shows the list title
-for estimate in estimates:                      # LOOP - goes through each saved estimate, one at a time
-    print("Name:", estimate["name"], "- Squares:", estimate["squares"], "- Total: $", estimate["total"])  # print() FUNCTION - shows name, squares, total from the DICTIONARY
+    new_estimate = make_estimate(customer_name, squares, total)   # VARIABLE = DICTIONARY - the logic function builds one estimate record
+    estimates.append(new_estimate)                # append() FUNCTION - adds the new estimate to the list
+
+    store.save(estimates)                         # FUNCTION CALL - the store writes the list into the file
+
+    print()                                       # print() FUNCTION - blank line for spacing
+    print("Saved estimates:")                     # print() FUNCTION - shows the list title
+
+    for estimate in estimates:                    # LOOP - goes through each saved estimate, one at a time
+        print("Name:", estimate["name"], "- Squares:", estimate["squares"], "- Total: $", estimate["total"])   # print() FUNCTION - shows name, squares, total from the DICTIONARY
+
+
+store = EstimateStore("estimates.json")           # VARIABLE = OBJECT - the real store, made here and handed to main
+main(store)                                       # FUNCTION CALL - runs the program with the real store handed in
