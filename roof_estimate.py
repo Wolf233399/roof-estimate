@@ -6,7 +6,7 @@
 
 
 from estimate_logic import calculate_area, calculate_squares, calculate_total   # IMPORT - brings in the math functions
-from estimate_logic import is_valid_name, is_valid_measurement, make_estimate    # IMPORT - brings in the checking and record functions
+from estimate_logic import is_valid_name, is_valid_address, is_valid_phone, is_valid_measurement, make_estimate    # IMPORT - brings in the checking and record functions
 from estimate_store import EstimateStore          # IMPORT - brings in the store class
 
 
@@ -21,6 +21,18 @@ def main(store):                                  # FUNCTION - runs the program;
 
     if is_valid_name(customer_name) == False:     # IF - checks if the name is empty, using the logic function
         print("Error: Customer name cannot be empty.")   # print() FUNCTION - shows the error message
+        exit()                                    # exit() FUNCTION - stops the program
+
+    address = input("Customer address: ")         # VARIABLE = input() FUNCTION - waits for typing, saves it in address
+
+    if is_valid_address(address) == False:        # IF - checks if the address is empty, using the logic function
+        print("Error: Customer address cannot be empty.")   # print() FUNCTION - shows the error message
+        exit()                                    # exit() FUNCTION - stops the program
+
+    phone = input("Customer phone: ")             # VARIABLE = input() FUNCTION - waits for typing, saves it in phone
+
+    if is_valid_phone(phone) == False:            # IF - checks if the phone is empty, using the logic function
+        print("Error: Customer phone cannot be empty.")   # print() FUNCTION - shows the error message
         exit()                                    # exit() FUNCTION - stops the program
 
     try:                                          # TRY - try to read the length as a number
@@ -71,7 +83,7 @@ def main(store):                                  # FUNCTION - runs the program;
     print("Roofing squares:", squares)            # print() FUNCTION - shows the squares VARIABLE
     print("Total price: $", total)                # print() FUNCTION - shows the total VARIABLE
 
-    new_estimate = make_estimate(customer_name, squares, total)   # VARIABLE = DICTIONARY - the logic function builds one estimate record
+    new_estimate = make_estimate(customer_name, address, phone, squares, total)   # VARIABLE = DICTIONARY - the logic function builds one estimate record
     estimates.append(new_estimate)                # append() FUNCTION - adds the new estimate to the list
 
     store.save(estimates)                         # FUNCTION CALL - the store writes the list into the file
