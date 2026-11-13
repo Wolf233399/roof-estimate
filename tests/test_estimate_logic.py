@@ -4,7 +4,7 @@
 
 
 from estimate_logic import calculate_area, calculate_squares, calculate_total   # IMPORT - brings in the math functions to test
-from estimate_logic import is_valid_name, is_valid_measurement, make_estimate    # IMPORT - brings in the checking and record functions to test
+from estimate_logic import is_valid_name, is_valid_address, is_valid_phone, is_valid_measurement, make_estimate    # IMPORT - brings in the checking and record functions to test
 
 
 def test_calculate_area():                        # FUNCTION - tests the area math
@@ -27,6 +27,22 @@ def test_typed_name_is_valid():                   # FUNCTION - tests the typed-n
     assert is_valid_name("Test") == True          # assert - checks that a typed name is valid
 
 
+def test_empty_address_is_not_valid():            # FUNCTION - tests the empty-address rule
+    assert is_valid_address("") == False          # assert - checks that an empty address is not valid
+
+
+def test_typed_address_is_valid():                # FUNCTION - tests the typed-address rule
+    assert is_valid_address("123 Main St") == True   # assert - checks that a typed address is valid
+
+
+def test_empty_phone_is_not_valid():              # FUNCTION - tests the empty-phone rule
+    assert is_valid_phone("") == False            # assert - checks that an empty phone is not valid
+
+
+def test_typed_phone_is_valid():                  # FUNCTION - tests the typed-phone rule
+    assert is_valid_phone("555-1234") == True     # assert - checks that a typed phone is valid
+
+
 def test_zero_measurement_is_not_valid():         # FUNCTION - tests the zero-measurement rule
     assert is_valid_measurement(0) == False       # assert - checks that 0 is not valid
 
@@ -40,7 +56,9 @@ def test_positive_measurement_is_valid():         # FUNCTION - tests the good-me
 
 
 def test_make_estimate():                         # FUNCTION - tests the record builder
-    result = make_estimate("Test", 20, 8500)     # VARIABLE = DICTIONARY - builds one estimate to check
+    result = make_estimate("Test", "123 Main St", "555-1234", 20, 8500)   # VARIABLE = DICTIONARY - builds one estimate to check
     assert result["name"] == "Test"               # assert - checks the name part of the record
+    assert result["address"] == "123 Main St"     # assert - checks the address part of the record
+    assert result["phone"] == "555-1234"          # assert - checks the phone part of the record
     assert result["squares"] == 20               # assert - checks the squares part of the record
     assert result["total"] == 8500               # assert - checks the total part of the record
