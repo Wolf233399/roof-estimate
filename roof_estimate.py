@@ -83,7 +83,7 @@ def main(store):                                  # FUNCTION - runs the program;
     print("Roofing squares:", squares)            # print() FUNCTION - shows the squares VARIABLE
     print("Total price: $", total)                # print() FUNCTION - shows the total VARIABLE
 
-    new_estimate = make_estimate(customer_name, address, phone, squares, total)   # VARIABLE = DICTIONARY - the logic function builds one estimate record
+    new_estimate = make_estimate(customer_name, address, phone, length, width, area, squares, material_cost, labor_cost, other_cost, total)   # VARIABLE = DICTIONARY - the logic function builds one estimate record with everything in it
     estimates.append(new_estimate)                # append() FUNCTION - adds the new estimate to the list
 
     store.save(estimates)                         # FUNCTION CALL - the store writes the list into the file
@@ -131,6 +131,39 @@ def main(store):                                  # FUNCTION - runs the program;
         for estimate in estimates:                # LOOP - goes through each saved estimate, one at a time
             print(number, "Name:", estimate["name"], "- Squares:", estimate["squares"], "- Total: $", estimate["total"], "- Status:", estimate.get("status", "Draft"))   # print() FUNCTION - shows the list with the new status in it
             number = number + 1                   # VARIABLE = CALCULATION - moves the counter to the next number
+
+    print()                                       # print() FUNCTION - blank line for spacing
+
+    view = input("Do you want to see the details of an estimate? Type y or n: ")   # VARIABLE = input() FUNCTION - waits for typing, saves it in view
+
+    if view == "y":                               # IF - only runs when the answer is y
+
+        try:                                      # TRY - try to read the estimate number as a whole number
+            pick = int(input("Type the number of the estimate: "))   # VARIABLE = int() FUNCTION changes typing to a whole number, input() asks for it
+        except ValueError:                        # EXCEPT - runs only if the typing was not a number
+            print("Error: Please type a number only.")   # print() FUNCTION - shows the error message
+            exit()                                # exit() FUNCTION - stops the program
+
+        if pick < 1 or pick > len(estimates):     # IF - the number is not on the list
+            print("Error: That number is not on the list.")   # print() FUNCTION - shows the error message
+            exit()                                # exit() FUNCTION - stops the program
+
+        estimate = estimates[pick - 1]            # VARIABLE = DICTIONARY - the one estimate he picked; pick - 1 because the list starts counting at 0
+
+        print()                                   # print() FUNCTION - blank line for spacing
+        print("Estimate details:")                # print() FUNCTION - shows the title
+        print("Name:", estimate.get("name", "Not saved"))   # print() FUNCTION - shows the name; get() prints Not saved for old estimates missing a part
+        print("Address:", estimate.get("address", "Not saved"))   # print() FUNCTION - shows the address
+        print("Phone:", estimate.get("phone", "Not saved"))   # print() FUNCTION - shows the phone number
+        print("Roof length:", estimate.get("length", "Not saved"), "feet")   # print() FUNCTION - shows the length
+        print("Roof width:", estimate.get("width", "Not saved"), "feet")   # print() FUNCTION - shows the width
+        print("Roof area:", estimate.get("area", "Not saved"), "sq ft")   # print() FUNCTION - shows the area
+        print("Roofing squares:", estimate.get("squares", "Not saved"))   # print() FUNCTION - shows the squares
+        print("Material cost: $", estimate.get("material", "Not saved"))   # print() FUNCTION - shows the material cost
+        print("Labor cost: $", estimate.get("labor", "Not saved"))   # print() FUNCTION - shows the labor cost
+        print("Other cost: $", estimate.get("other", "Not saved"))   # print() FUNCTION - shows the other cost
+        print("Total price: $", estimate.get("total", "Not saved"))   # print() FUNCTION - shows the total price
+        print("Status:", estimate.get("status", "Draft"))   # print() FUNCTION - shows the status
 
 
 store = EstimateStore("estimates.json")           # VARIABLE = OBJECT - the real store, made here and handed to main
