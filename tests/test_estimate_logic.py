@@ -4,7 +4,7 @@
 
 
 from estimate_logic import calculate_area, calculate_squares, calculate_total   # IMPORT - brings in the math functions to test
-from estimate_logic import is_valid_name, is_valid_address, is_valid_phone, is_valid_measurement, make_estimate    # IMPORT - brings in the checking and record functions to test
+from estimate_logic import is_valid_name, is_valid_address, is_valid_phone, is_valid_measurement, is_valid_status, make_estimate, set_status    # IMPORT - brings in the checking and record functions to test
 
 
 def test_calculate_area():                        # FUNCTION - tests the area math
@@ -55,6 +55,30 @@ def test_positive_measurement_is_valid():         # FUNCTION - tests the good-me
     assert is_valid_measurement(40) == True       # assert - checks that 40 is valid
 
 
+def test_good_status_is_valid():                  # FUNCTION - tests the good-status rule
+    assert is_valid_status("Approved") == True    # assert - checks that Approved is a real stage
+
+
+def test_bad_status_is_not_valid():               # FUNCTION - tests the bad-status rule
+    assert is_valid_status("Banana") == False     # assert - checks that a made-up word is not a stage
+
+
+def test_empty_status_is_not_valid():             # FUNCTION - tests the empty-status rule
+    assert is_valid_status("") == False           # assert - checks that an empty status is not valid
+
+
+def test_set_status_changes_it():                 # FUNCTION - tests changing a status
+    estimate = make_estimate("Test", "123 Main St", "555-1234", 20, 8500)   # VARIABLE = DICTIONARY - builds one estimate to change
+    assert set_status(estimate, "Submitted") == True   # assert - checks the change was accepted
+    assert estimate["status"] == "Submitted"      # assert - checks the record now holds the new status
+
+
+def test_set_status_rejects_bad_word():           # FUNCTION - tests refusing a bad status word
+    estimate = make_estimate("Test", "123 Main St", "555-1234", 20, 8500)   # VARIABLE = DICTIONARY - builds one estimate to try to change
+    assert set_status(estimate, "Banana") == False   # assert - checks the change was refused
+    assert estimate["status"] == "Draft"          # assert - checks the status stayed Draft
+
+
 def test_make_estimate():                         # FUNCTION - tests the record builder
     result = make_estimate("Test", "123 Main St", "555-1234", 20, 8500)   # VARIABLE = DICTIONARY - builds one estimate to check
     assert result["name"] == "Test"               # assert - checks the name part of the record
@@ -62,3 +86,4 @@ def test_make_estimate():                         # FUNCTION - tests the record 
     assert result["phone"] == "555-1234"          # assert - checks the phone part of the record
     assert result["squares"] == 20               # assert - checks the squares part of the record
     assert result["total"] == 8500               # assert - checks the total part of the record
+    assert result["status"] == "Draft"            # assert - checks a new record starts as Draft

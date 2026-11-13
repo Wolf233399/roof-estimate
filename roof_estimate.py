@@ -6,7 +6,7 @@
 
 
 from estimate_logic import calculate_area, calculate_squares, calculate_total   # IMPORT - brings in the math functions
-from estimate_logic import is_valid_name, is_valid_address, is_valid_phone, is_valid_measurement, make_estimate    # IMPORT - brings in the checking and record functions
+from estimate_logic import is_valid_name, is_valid_address, is_valid_phone, is_valid_measurement, is_valid_status, make_estimate, set_status    # IMPORT - brings in the checking and record functions
 from estimate_store import EstimateStore          # IMPORT - brings in the store class
 
 
@@ -91,8 +91,46 @@ def main(store):                                  # FUNCTION - runs the program;
     print()                                       # print() FUNCTION - blank line for spacing
     print("Saved estimates:")                     # print() FUNCTION - shows the list title
 
+    number = 1                                    # VARIABLE - counts the estimates as the list prints
+
     for estimate in estimates:                    # LOOP - goes through each saved estimate, one at a time
-        print("Name:", estimate["name"], "- Squares:", estimate["squares"], "- Total: $", estimate["total"])   # print() FUNCTION - shows name, squares, total from the DICTIONARY
+        print(number, "Name:", estimate["name"], "- Squares:", estimate["squares"], "- Total: $", estimate["total"], "- Status:", estimate.get("status", "Draft"))   # print() FUNCTION - shows number, name, squares, total, status from the DICTIONARY; get() shows Draft for old estimates that have no status saved
+        number = number + 1                       # VARIABLE = CALCULATION - moves the counter to the next number
+
+    print()                                       # print() FUNCTION - blank line for spacing
+
+    change = input("Do you want to change the status of an estimate? Type y or n: ")   # VARIABLE = input() FUNCTION - waits for typing, saves it in change
+
+    if change == "y":                             # IF - only runs when the answer is y
+
+        try:                                      # TRY - try to read the estimate number as a whole number
+            pick = int(input("Type the number of the estimate: "))   # VARIABLE = int() FUNCTION changes typing to a whole number, input() asks for it
+        except ValueError:                        # EXCEPT - runs only if the typing was not a number
+            print("Error: Please type a number only.")   # print() FUNCTION - shows the error message
+            exit()                                # exit() FUNCTION - stops the program
+
+        if pick < 1 or pick > len(estimates):     # IF - the number is not on the list
+            print("Error: That number is not on the list.")   # print() FUNCTION - shows the error message
+            exit()                                # exit() FUNCTION - stops the program
+
+        print("Stages: Draft, Submitted, Approved, Completed")   # print() FUNCTION - shows the 4 stages to pick from
+
+        new_status = input("Type the new status: ")   # VARIABLE = input() FUNCTION - waits for typing, saves it in new_status
+
+        if set_status(estimates[pick - 1], new_status) == False:   # IF - the logic function says the word is not a real stage; pick - 1 because the list starts counting at 0
+            print("Error: Status must be Draft, Submitted, Approved, or Completed.")   # print() FUNCTION - shows the error message
+            exit()                                # exit() FUNCTION - stops the program
+
+        store.save(estimates)                     # FUNCTION CALL - the store writes the list with the new status into the file
+
+        print()                                   # print() FUNCTION - blank line for spacing
+        print("Status changed. Saved estimates:")   # print() FUNCTION - shows the list title again
+
+        number = 1                                # VARIABLE - starts the counting again at 1
+
+        for estimate in estimates:                # LOOP - goes through each saved estimate, one at a time
+            print(number, "Name:", estimate["name"], "- Squares:", estimate["squares"], "- Total: $", estimate["total"], "- Status:", estimate.get("status", "Draft"))   # print() FUNCTION - shows the list with the new status in it
+            number = number + 1                   # VARIABLE = CALCULATION - moves the counter to the next number
 
 
 store = EstimateStore("estimates.json")           # VARIABLE = OBJECT - the real store, made here and handed to main
