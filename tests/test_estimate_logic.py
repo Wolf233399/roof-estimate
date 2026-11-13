@@ -68,22 +68,28 @@ def test_empty_status_is_not_valid():             # FUNCTION - tests the empty-s
 
 
 def test_set_status_changes_it():                 # FUNCTION - tests changing a status
-    estimate = make_estimate("Test", "123 Main St", "555-1234", 20, 8500)   # VARIABLE = DICTIONARY - builds one estimate to change
+    estimate = make_estimate("Test", "123 Main St", "555-1234", 40, 50, 2000, 20, 5000, 3000, 500, 8500)   # VARIABLE = DICTIONARY - builds one estimate to change
     assert set_status(estimate, "Submitted") == True   # assert - checks the change was accepted
     assert estimate["status"] == "Submitted"      # assert - checks the record now holds the new status
 
 
 def test_set_status_rejects_bad_word():           # FUNCTION - tests refusing a bad status word
-    estimate = make_estimate("Test", "123 Main St", "555-1234", 20, 8500)   # VARIABLE = DICTIONARY - builds one estimate to try to change
+    estimate = make_estimate("Test", "123 Main St", "555-1234", 40, 50, 2000, 20, 5000, 3000, 500, 8500)   # VARIABLE = DICTIONARY - builds one estimate to try to change
     assert set_status(estimate, "Banana") == False   # assert - checks the change was refused
     assert estimate["status"] == "Draft"          # assert - checks the status stayed Draft
 
 
 def test_make_estimate():                         # FUNCTION - tests the record builder
-    result = make_estimate("Test", "123 Main St", "555-1234", 20, 8500)   # VARIABLE = DICTIONARY - builds one estimate to check
+    result = make_estimate("Test", "123 Main St", "555-1234", 40, 50, 2000, 20, 5000, 3000, 500, 8500)   # VARIABLE = DICTIONARY - builds one estimate to check
     assert result["name"] == "Test"               # assert - checks the name part of the record
     assert result["address"] == "123 Main St"     # assert - checks the address part of the record
     assert result["phone"] == "555-1234"          # assert - checks the phone part of the record
+    assert result["length"] == 40                # assert - checks the length part of the record
+    assert result["width"] == 50                 # assert - checks the width part of the record
+    assert result["area"] == 2000                # assert - checks the area part of the record
     assert result["squares"] == 20               # assert - checks the squares part of the record
+    assert result["material"] == 5000            # assert - checks the material cost part of the record
+    assert result["labor"] == 3000               # assert - checks the labor cost part of the record
+    assert result["other"] == 500                # assert - checks the other cost part of the record
     assert result["total"] == 8500               # assert - checks the total part of the record
     assert result["status"] == "Draft"            # assert - checks a new record starts as Draft

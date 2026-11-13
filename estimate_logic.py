@@ -58,6 +58,6 @@ def set_status(estimate, new_status):    # FUNCTION - changes the status saved i
     return True    # RETURN - True means the status was changed
 
 
-def make_estimate(customer_name, address, phone, squares, total):    # FUNCTION - builds one estimate record
-    new_estimate = {"name": customer_name, "address": address, "phone": phone, "squares": squares, "total": total, "status": "Draft"}    # VARIABLE = DICTIONARY - one estimate, and every new one starts as Draft
+def make_estimate(customer_name, address, phone, length, width, area, squares, material_cost, labor_cost, other_cost, total):    # FUNCTION - builds one estimate record
+    new_estimate = {"name": customer_name, "address": address, "phone": phone, "length": length, "width": width, "area": area, "squares": squares, "material": material_cost, "labor": labor_cost, "other": other_cost, "total": total, "status": "Draft"}    # VARIABLE = DICTIONARY - one estimate with everything saved, and every new one starts as Draft
     return new_estimate    # RETURN - hands the new estimate back to the caller
